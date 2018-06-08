@@ -4,12 +4,12 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1le6onp</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="Task_084qrvj">
+    <bpmn:task id="Task_084qrvj" name="">
       <bpmn:incoming>SequenceFlow_1le6onp</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0br39ca</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_1le6onp" sourceRef="StartEvent_1" targetRef="Task_084qrvj" />
-    <bpmn:task id="Task_0kn0avz">
+    <bpmn:task id="Task_0kn0avz" name="">
       <bpmn:incoming>SequenceFlow_0br39ca</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ph8wdc</bpmn:outgoing>
     </bpmn:task>

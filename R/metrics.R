@@ -10,48 +10,87 @@
 #' @param file_path file path of the BPMN file and
 #' @param cross_connectivity_metric a param indicating whether cross_connectivity shall be calculated as well
 #' @param signavio boolean which indicates whether the file stems from signavio
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
 #' @return a tibble with one row and for each metric a column
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' calculate_metrics(file_path)
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
+#' repetition_and_path_log <- create_path_and_repetition_log(file_path)}
+#' calculate_metrics(file_path, generate_new_path_log = TRUE)
 #' @export
 calculate_metrics <-
   function(file_path,
            cross_connectivity_metric = TRUE,
-           signavio = FALSE) {
-    doc <- create_internal_doc(file_path, signavio)
-    path_repetition_log <-
-      create_path_and_repetition_log(doc, signavio = signavio)
-    all_metrics <- tibble(
-      file = file_path,
-      size = size_process_model(doc, signavio),
-      empty_sequence_flows = n_empty_sequence_flows(doc, signavio),
-      duplicate_tasks = n_duplicate_tasks(doc, signavio),
-      number_pools = n_pools(doc, signavio),
-      number_data_objects = n_data_objects(doc, signavio),
-      number_swimlanes = n_swimlanes(doc, signavio),
-      number_message_flows = n_message_flows(doc, signavio),
-      density = density_process_model(doc, signavio),
-      coef_network_connectivity = coefficient_network_connectivity(doc, signavio),
-      avg_connector_degree = avg_connector_degree(doc, signavio),
-      max_connector_degree = max_connector_degree(doc, signavio),
-      connectivity_level_between_pools = connectivity_level_between_pools(doc, signavio),
-      sequentiality = sequentiality(doc, signavio),
-      cyclicity = cyclicity(path_repetition_log, doc, signavio),
-      diameter = diameter(path_repetition_log),
-      depth = depth(path_repetition_log),
-      token_split = token_split(doc, signavio),
-      cfc = control_flow_complexity(doc, signavio),
-      connector_mismatch = connector_mismatch(doc, signavio),
-      connector_heterogeneity = connector_heterogeneity(doc, signavio),
-      separability = separability(path_repetition_log, doc, signavio),
-      structuredness = structuredness(path_repetition_log, doc, signavio)
-    )
-    if (cross_connectivity_metric) {
-      cross_connectivity_result <-
-        cross_connectivity(path_repetition_log, doc, signavio)
-      all_metrics <- cbind(all_metrics, cross_connectivity_result)
+           signavio = FALSE,
+           generate_new_path_log = FALSE) {
+    if(!generate_new_path_log ) {
+      repetition_and_path_log <-
+        create_path_and_repetition_log(file_path, signavio = signavio)
+      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      all_metrics <- tibble(
+        file = file_path,
+        size = size_process_model(file_path, signavio),
+        empty_sequence_flows = n_empty_sequence_flows(file_path, signavio),
+        duplicate_tasks = n_duplicate_tasks(file_path, signavio),
+        number_pools = n_pools(file_path, signavio),
+        number_data_objects = n_data_objects(file_path, signavio),
+        number_swimlanes = n_swimlanes(file_path, signavio),
+        number_message_flows = n_message_flows(file_path, signavio),
+        density = density_process_model(file_path, signavio),
+        coef_network_connectivity = coefficient_network_connectivity(file_path, signavio),
+        avg_connector_degree = avg_connector_degree(file_path, signavio),
+        max_connector_degree = max_connector_degree(file_path, signavio),
+        connectivity_level_between_pools = connectivity_level_between_pools(file_path, signavio),
+        sequentiality = sequentiality(file_path, signavio),
+        cyclicity = cyclicity(file_path, signavio, path_log_already_created = TRUE),
+        diameter = diameter(file_path, path_log_already_created = TRUE),
+        depth = depth(file_path, path_log_already_created = TRUE),
+        token_split = token_split(file_path, signavio),
+        cfc = control_flow_complexity(file_path, signavio),
+        connector_mismatch = connector_mismatch(file_path, signavio),
+        connector_heterogeneity = connector_heterogeneity(file_path, signavio),
+        separability = separability(file_path, signavio, path_log_already_created = TRUE),
+        structuredness = structuredness(file_path, signavio, path_log_already_created = TRUE), 
+        cyclomatic_metric = cyclomatic_metric(file_path, signavio, path_log_already_created = TRUE)
+      )
+      if (cross_connectivity_metric) {
+        cross_connectivity_result <-
+          cross_connectivity(file_path, signavio, path_log_already_created = TRUE)
+        all_metrics <- cbind(all_metrics, cross_connectivity_result)
+      }
+    } else {
+      all_metrics <- tibble(
+        file = file_path,
+        size = size_process_model(file_path, signavio),
+        empty_sequence_flows = n_empty_sequence_flows(file_path, signavio),
+        duplicate_tasks = n_duplicate_tasks(file_path, signavio),
+        number_pools = n_pools(file_path, signavio),
+        number_data_objects = n_data_objects(file_path, signavio),
+        number_swimlanes = n_swimlanes(file_path, signavio),
+        number_message_flows = n_message_flows(file_path, signavio),
+        density = density_process_model(file_path, signavio),
+        coef_network_connectivity = coefficient_network_connectivity(file_path, signavio),
+        avg_connector_degree = avg_connector_degree(file_path, signavio),
+        max_connector_degree = max_connector_degree(file_path, signavio),
+        connectivity_level_between_pools = connectivity_level_between_pools(file_path, signavio),
+        sequentiality = sequentiality(file_path, signavio),
+        cyclicity = cyclicity(file_path, signavio, generate_new_path_log = TRUE),
+        diameter = diameter(file_path, generate_new_path_log = TRUE),
+        depth = depth(file_path, generate_new_path_log = TRUE),
+        token_split = token_split(file_path, signavio),
+        cfc = control_flow_complexity(file_path, signavio),
+        connector_mismatch = connector_mismatch(file_path, signavio),
+        connector_heterogeneity = connector_heterogeneity(file_path, signavio),
+        separability = separability(file_path, signavio, generate_new_path_log = TRUE),
+        structuredness = structuredness(file_path, signavio, generate_new_path_log = TRUE), 
+        cyclomatic_metric = cyclomatic_metric(file_path, signavio,  generate_new_path_log = TRUE)
+      )
+      if (cross_connectivity_metric) {
+        cross_connectivity_result <-
+          cross_connectivity(file_path, signavio, generate_new_path_log = TRUE)
+        all_metrics <- cbind(all_metrics, cross_connectivity_result)
+      }
     }
+    
     return(all_metrics)
   }
 
@@ -60,15 +99,16 @@ calculate_metrics <-
 #' @title Size
 #'
 #' @description The size of a model is the number of tasks, gateways and events
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the size
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' size_process_model(create_internal_doc(file_path))
+#' size_process_model(file_path)
 #' @export
 size_process_model <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     size <- number_tasks(xml_internal_doc, signavio) +
       number_AND_gateways(xml_internal_doc, signavio) +
       number_XOR_gateways(xml_internal_doc, signavio) +
@@ -76,25 +116,28 @@ size_process_model <-
       number_complex_gateways(xml_internal_doc, signavio) +
       number_event_based_gateways(xml_internal_doc, signavio) +
       number_events(xml_internal_doc, signavio) +
-      n_data_objects(xml_internal_doc, signavio)
+      n_data_objects(file_path, signavio)
     return(size)
   }
 
 #' @title Data Objects
 #'
 #' @description The number of data objects includes all data objects and data stores of a BPMN diagram
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of data objects
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_data_objects(create_internal_doc(file_path))
+#' n_data_objects(file_path)
 #' @export
-n_data_objects <- function(xml_internal_doc, signavio = FALSE) {
+n_data_objects <- function(file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   if (!signavio) {
     data_objects <-
-      getNodeSet(xml_internal_doc,
-                 "//bpmn:dataStoreReference | //bpmn:dataObjectReference | //dataStore")
+      getNodeSet(
+        xml_internal_doc,
+        "//bpmn:dataStoreReference | //bpmn:dataObjectReference | //dataStore"
+      )
   } else {
     data_objects <-
       getNodeSet(
@@ -109,35 +152,37 @@ n_data_objects <- function(xml_internal_doc, signavio = FALSE) {
 #' @title The connectivity level between pools
 #'
 #' @description The connectivity level between pools is the number of message flows over the number of pools
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the connectivity level between pools
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' connectivity_level_between_pools(create_internal_doc(file_path))
+#' connectivity_level_between_pools(file_path)
 #' @export
 connectivity_level_between_pools <-
-  function(xml_internal_doc, signavio = FALSE) {
-    if(n_pools(xml_internal_doc, signavio) == 0)
-      return(n_message_flows(xml_internal_doc, signavio))
+  function(file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    if (n_pools(file_path, signavio) == 0)
+      return(n_message_flows(file_path, signavio))
     else
       return(
-        n_message_flows(xml_internal_doc, signavio) / n_pools(xml_internal_doc, signavio)
-     )
+        n_message_flows(file_path, signavio) / n_pools(file_path, signavio)
+      )
   }
 
 #' @title Empty sequence flows
 #'
 #' @description Empty sequence flow is defined as a flow which connects a split parallel gateway with a join parallel gateway without any tasks in between
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of empty sequence flows
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_empty_sequence_flows(create_internal_doc(file_path))
+#' n_empty_sequence_flows(file_path)
 #' @export
 n_empty_sequence_flows <-
-  function(xml_internal_doc, signavio = FALSE) {
+  function(file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     #Take all sequence flow nodes and save the target and source in one object
     if (!signavio)
       sequence_flow_nodes <-
@@ -203,14 +248,15 @@ n_empty_sequence_flows <-
 #' @title Duplicate tasks
 #'
 #' @description Duplicate tasks are tasks which share the same name with other tasks
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of duplicate tasks
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_duplicate_tasks(create_internal_doc(file_path))
+#' n_duplicate_tasks(file_path)
 #' @export
-n_duplicate_tasks <- function(xml_internal_doc, signavio = FALSE) {
+n_duplicate_tasks <- function(file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   number_occurences <- NULL
   tasks <-
     task_names(xml_internal_doc = xml_internal_doc, signavio = signavio)
@@ -228,14 +274,15 @@ n_duplicate_tasks <- function(xml_internal_doc, signavio = FALSE) {
 #' @title Number of pools
 #'
 #' @description Number of pools in the process models. A pool represents an organisation or an entity
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of pools
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_pools(create_internal_doc(file_path))
+#' n_pools(file_path)
 #' @export
-n_pools <- function(xml_internal_doc, signavio = FALSE) {
+n_pools <- function(file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   if (!signavio)
     pools <-
       getNodeSet(xml_internal_doc, "//bpmn:participant | //process")
@@ -250,16 +297,18 @@ n_pools <- function(xml_internal_doc, signavio = FALSE) {
 #' @title Number of swimlanes
 #'
 #' @description Number of swimlanes in the pools. A swimlane represents a person, role or team
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of swimlanes
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_swimlanes(create_internal_doc(file_path))
+#' n_swimlanes(file_path)
 #' @export
-n_swimlanes <- function(xml_internal_doc, signavio = FALSE) {
+n_swimlanes <- function(file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   if (!signavio)
-    swimlanes <- getNodeSet(xml_internal_doc, "//bpmn:lane | //lane")
+    swimlanes <-
+      getNodeSet(xml_internal_doc, "//bpmn:lane | //lane")
   else
     swimlanes <-
       getNodeSet(xml_internal_doc,
@@ -271,14 +320,15 @@ n_swimlanes <- function(xml_internal_doc, signavio = FALSE) {
 #' @title Number of message flows
 #'
 #' @description Number of message flows. Message flows are used for communication between processes and link message events
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the number of message flows
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' n_message_flows(create_internal_doc(file_path))
+#' n_message_flows(file_path)
 #' @export
-n_message_flows <- function(xml_internal_doc, signavio = FALSE) {
+n_message_flows <- function(file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   if (!signavio)
     message_flows <-
       getNodeSet(xml_internal_doc, "//bpmn:messageFlow | //messageFlow")
@@ -293,22 +343,23 @@ n_message_flows <- function(xml_internal_doc, signavio = FALSE) {
 #' @title Density
 #'
 #' @description Density is defined as the number of sequence flows divided by the size times the size minus one
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the density
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' density_process_model(create_internal_doc(file_path))
+#' density_process_model(file_path)
 #' @export
 density_process_model <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     density_diagram <-
       number_sequence_flows(xml_internal_doc, signavio) / ((
-        size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
       ) * ((
-        size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
       ) - 1))
-    if(is.nan(density_diagram) |is.infinite(density_diagram)) 
+    if (is.nan(density_diagram) | is.infinite(density_diagram))
       density_diagram <- 0
     return(density_diagram)
   }
@@ -316,36 +367,103 @@ density_process_model <-
 #' @title Coefficient of network connectivity
 #'
 #' @description Coefficient of network connectivity is defined as the number of sequence flows divided by the size
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the coefficient of network connectivity
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' coefficient_network_connectivity(create_internal_doc(file_path))
+#' coefficient_network_connectivity(file_path)
 #' @export
 coefficient_network_connectivity <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     coef_network_connectivity <-
       number_sequence_flows(xml_internal_doc, signavio) / (
-        size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
       )
-    if(is.nan(coef_network_connectivity) |is.infinite(coef_network_connectivity)) 
+    if (is.nan(coef_network_connectivity) |
+        is.infinite(coef_network_connectivity))
       coef_network_connectivity <- 0
     return(coef_network_connectivity)
+  }
+
+#' @title Cyclomatic metric of McCabe
+#'
+#' @description Cyclomatic metric takes into account the behavioral complexity of a process model. It is calculated by taking the number of activities minus
+#' the number of events, gateways and connector activities plus the number of strongly connected components.
+#' The number of strongly connected components is calculated by taking the number of exclusive gateways at depth level zero, when the depth is calculated only including exclusive gateways
+#' @param file_path document object created using the create_internal_document function
+#' @param signavio boolean which indicates whether the file stems from signavio
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
+#' @return an integer indicating the coefficient of network connectivity
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' cyclomatic_metric(file_path, generate_new_path_log = TRUE)
+#' @export
+cyclomatic_metric <-
+  function (file_path,
+            signavio = FALSE,
+            path_log_already_created = FALSE,
+            generate_new_path_log = FALSE,
+            time_to_generate_path_log = 1500) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    if(!path_log_already_created) {
+      repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+                 TimeoutException = function(ex) "TimedOut")
+      if(!generate_new_path_log ) {
+        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      }
+    } 
+    if(length(repetition_and_path_log) > 1) {
+      if (!signavio) {
+        join_activities <-
+          join_gateways(
+            xml_internal_doc,
+            "//bpmn:task | //bpmn:sendTask | //bpmn:receiveTask |
+            //bpmn:manualTask | //bpmn:businessRuleTask | //bpmn:userTask | //bpmn:scriptTask |
+            //bpmn:subProcess | //bpmn:callActivity | //task",
+            signavio
+          )
+        
+      } else {
+        join_activities <-
+          join_gateways(
+            xml_internal_doc,
+            "//xmlns:task | //xmlns:sendTask |
+            //xmlns:receiveTask | //xmlns:manualTask | //xmlns:businessRuleTask | //xmlns:userTask |
+            //xmlns:scriptTask | //xmlns:subProcess | //xmlns:callActivity",
+            signavio
+          )
+      }
+      number_strongly_connected_components <-
+        number_connected_components(repetition_and_path_log, xml_internal_doc, signavio)
+      cyclomatic_metric <- number_tasks(xml_internal_doc, signavio) -
+        number_XOR_gateways(xml_internal_doc, signavio) -
+        length(join_activities) - 
+        number_event_based_gateways(xml_internal_doc, signavio) + number_strongly_connected_components
+    } else {
+      cyclomatic_metric <- NA
+    }
+    
+    
+    return(cyclomatic_metric)
   }
 
 #' @title Average connector degree
 #'
 #' @description Average connector degree is defined as the average incoming and outgoing sequence flows of all gateways and activities with at least two incoming or outgoing sequence flows
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the average connector degree
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' avg_connector_degree(create_internal_doc(file_path))
+#' avg_connector_degree(file_path)
 #' @export
 avg_connector_degree <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     number_gateways <- number_AND_gateways(xml_internal_doc, signavio) +
       number_XOR_gateways(xml_internal_doc, signavio) +
       number_OR_gateways(xml_internal_doc, signavio) +
@@ -402,15 +520,16 @@ avg_connector_degree <-
 #' @title Maximum connector degree
 #'
 #' @description Maximum connector degree is defined as the gateway or activity with the most incoming and outgoing sequence flows
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the maximum connector degree
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' max_connector_degree(create_internal_doc(file_path))
+#' max_connector_degree(file_path)
 #' @export
 max_connector_degree <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     return(max_io_flows_gateways_activities(xml_internal_doc, signavio))
   }
 
@@ -419,19 +538,31 @@ max_connector_degree <-
 #' @description {A cut vertex is a node which if removed, splits the diagram into two pieces
 #' The consequence is that elements which are part of each path can be defined as a cut vertex
 #' Separability is defined as the number of cut vertices divided by (the size of the model - 2)}
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
 #' @return an integer indicating the separability
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' separability(path_log, create_internal_doc(file_path))
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' separability(file_path, generate_new_path_log = TRUE)
 #' @export
 separability <-
-  function(repetition_and_path_log,
-           xml_internal_doc,
-           signavio = FALSE) {
+  function(file_path,
+           signavio = FALSE,
+           path_log_already_created = FALSE,
+           generate_new_path_log = FALSE,
+           time_to_generate_path_log = 1500) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    if(!path_log_already_created) {
+      repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+                 TimeoutException = function(ex) "TimedOut")
+      if(!generate_new_path_log ) {
+        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      }
+    } 
+    if(length(repetition_and_path_log) > 1) {
     elements <- NULL
     #Take the intersection of all paths of the path log, filter the join and split element and remove duplicates
     if (length(repetition_and_path_log[[1]]) > 0) {
@@ -523,14 +654,14 @@ separability <-
         n_cut_vertices <- 0
       
       #Calculate the size of the model by taking all the unique elements of the path log
-      size_model <- size_process_model(xml_internal_doc, signavio)
+      size_model <- size_process_model(file_path, signavio)
       
       #Make a distinction between an empty model and a model containing more than 2 elements
       #Separability is equal to the number of cut vertices divided by the size of the model - 2,
       #if the size is bigger than 2, otherwise it is 0
       if (size_model > 2)
         separability <-
-        n_cut_vertices / (size_model - n_data_objects(xml_internal_doc, signavio) - 2)
+        n_cut_vertices / (size_model - n_data_objects(file_path, signavio) - 2)
       else
         separability <- 1
       
@@ -538,19 +669,23 @@ separability <-
     } else {
       return (1)
     }
+    } else {
+      return(NA)
+    }
     }
 
 #' @title Sequentiality
 #'
 #' @description Sequentiality is defined as the number of sequence flows connecting two tasks divided by the total number of sequence flows
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the sequentiality
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' sequentiality(create_internal_doc(file_path))
+#' sequentiality(file_path)
 #' @export
-sequentiality <- function (xml_internal_doc, signavio = FALSE) {
+sequentiality <- function (file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   task_id <- NULL
   sequential <- NULL
   #Take all sequence flow nodes and save the target and source in one object
@@ -622,21 +757,35 @@ sequentiality <- function (xml_internal_doc, signavio = FALSE) {
 #' @title Cyclicity
 #'
 #' @description Cyclicity is defined as the number of nodes on a cycle divided by the total number of nodes
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
 #' @return an integer indicating the cyclicity
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' cyclicity(path_log, create_internal_doc(file_path))
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' cyclicity(file_path, generate_new_path_log = TRUE)
 #' @export
 cyclicity <-
-  function(repetition_and_path_log,
-           xml_internal_doc,
-           signavio = FALSE) {
+  function(file_path,
+           signavio = FALSE,
+           path_log_already_created = FALSE,
+           generate_new_path_log = FALSE,
+           time_to_generate_path_log = 1500) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    if(!path_log_already_created) {
+      repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+                 TimeoutException = function(ex) "TimedOut")
+      if(!generate_new_path_log ) {
+        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      }
+    } 
+    
+    if(length(repetition_and_path_log) > 1) {
     #Take all elements which are part of the loops
-    elements_on_cycle <- unique(unlist(repetition_and_path_log[[2]]))
+    elements_on_cycle <-
+      unique(unlist(repetition_and_path_log[[2]]))
     
     #filter out of elements on cycle all elements which have the name split or join
     elements_on_cycle <-
@@ -646,8 +795,11 @@ cyclicity <-
     #if the path log is empty, return zero, otherwise return the cyclicity
     cyclicity <-
       length(elements_on_cycle) / (
-        size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
       )
+    } else {
+      cyclicity <- NA
+    }
     return(cyclicity)
   }
 
@@ -655,14 +807,30 @@ cyclicity <-
 #'
 #' @description Length of longest path, in practice the length of longest path.
 #' The assumption is made that one repetition for each loop is allowed and these repetitions count as well for the diameter
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
+#' @param file_path document object created using the create_internal_document function
+#' @param signavio boolean which indicates whether the file stems from signavio
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
 #' @return an integer indicating the diameter
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' diameter(path_log)
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' diameter(file_path, generate_new_path_log = TRUE)
 #' @export
-diameter <- function(repetition_and_path_log) {
+diameter <- function(file_path, 
+                     signavio = FALSE,
+                     path_log_already_created = FALSE,
+                     generate_new_path_log = FALSE,
+                     time_to_generate_path_log = 1500) {
+  repetition_and_path_log <- NULL
+  if(!path_log_already_created) {
+    repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+               TimeoutException = function(ex) "TimedOut")
+    if(!generate_new_path_log ) {
+      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+    }
+  } 
+  if(length(repetition_and_path_log) > 1) {
   path_log <- repetition_and_path_log[[1]]
   
   #filter out all join and split elements as these are not relevant for the diameter
@@ -680,6 +848,9 @@ diameter <- function(repetition_and_path_log) {
   } else {
     return (0)
   }
+  } else {
+    return(NA)
+  }
 }
 
 #' @title Structuredness
@@ -691,19 +862,32 @@ diameter <- function(repetition_and_path_log) {
 #' -removal of matching gateways (for loops, this means first a join then a split, for all other gateways, it's the other way around)
 #' -loops with other than XOR-gateways and non-matching gateways are kept
 #' -gateways which are the consequence of multiple start or end events are removed
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
 #' @return an integer indicating the structuredness
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' structuredness(path_log, create_internal_doc(file_path))
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' structuredness(file_path, generate_new_path_log = TRUE)
 #' @export
 structuredness <-
-  function(repetition_and_path_log,
-           xml_internal_doc,
-           signavio = FALSE) {
+  function(file_path,
+           signavio = FALSE,
+           path_log_already_created = FALSE,
+           generate_new_path_log = FALSE,
+           time_to_generate_path_log = 1500) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    
+    if(!path_log_already_created) {
+      repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+                 TimeoutException = function(ex) "TimedOut")
+      if(!generate_new_path_log ) {
+        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      }
+    } 
+    if(length(repetition_and_path_log) > 1) {
     # Take the structured path_log
     structured_path_log <- repetition_and_path_log[[4]]
     
@@ -736,7 +920,8 @@ structuredness <-
           ))
         return(indices_elements_to_keep)
       })
-    indices_elements_to_keep <- lapply(indices_elements_to_keep, sort)
+    indices_elements_to_keep <-
+      lapply(indices_elements_to_keep, sort)
     
     #Filter all elements with the corresponding index
     reduce_path <- function(path, keep_element_indices) {
@@ -754,25 +939,28 @@ structuredness <-
         "XOR-join",
         "XOR-loop-split",
         "Other-loop-split")
-    if(length(reduced_path_log) > 0) {
-    non_structured_elements <-
-      unstructuredElements(reduced_path_log, join_elements_and_loop_split)
+    if (length(reduced_path_log) > 0) {
+      non_structured_elements <-
+        unstructuredElements(reduced_path_log, join_elements_and_loop_split)
     }
     
     #remove all duplicates and make a vector in order to get the elements of the reduced model
     
     
-    if(length(reduced_path_log) == 0) {
-      size_reduced_model <- size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+    if (length(reduced_path_log) == 0) {
+      size_reduced_model <-
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
     } else {
       non_structured_elements <- unique(unlist(non_structured_elements))
       size_reduced_model <- length(non_structured_elements)
     }
     structuredness <-
       1 - (size_reduced_model / (
-        size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+        size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
       ))
-    
+    } else {
+      structuredness <- NA
+    }
     return (structuredness)
   }
 
@@ -783,14 +971,30 @@ structuredness <-
 #' If there is a join gateway, the depth is decreased with one.
 #' The cumulative sum is taken and the maximum of the cumulative sum is calculated for each path.
 #' The nesting depth is the maximum of each path value
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
+#' @param file_path document object created using the create_internal_document function
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
+#' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the depth
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' depth(path_log)
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' depth(file_path, generate_new_path_log = TRUE)
 #' @export
-depth <- function(repetition_and_path_log) {
+depth <- function(file_path,
+                  signavio = FALSE,
+                  path_log_already_created = FALSE,
+                  generate_new_path_log = FALSE,
+                  time_to_generate_path_log = 1500) {
+  
+  if(!path_log_already_created) {
+    repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+               TimeoutException = function(ex) "TimedOut")
+    if(!generate_new_path_log ) {
+      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+    }
+  } 
+  if(length(repetition_and_path_log) > 1) {
   path_log <- repetition_and_path_log[[1]]
   
   #Filter out of the path log only the elements with a join or split name
@@ -840,6 +1044,9 @@ depth <- function(repetition_and_path_log) {
     return(depth)
   } else
     return(0)
+  } else {
+    return(NA)
+  }
 }
 
 
@@ -847,14 +1054,15 @@ depth <- function(repetition_and_path_log) {
 #'
 #' @description {Token split is defined as the sum of the outgoing flows of parallel, inclusive and complex gateways minus one,
 #' because otherwise the token_split value is always one, while it should be zero if there are}
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the token_split
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' token_split(create_internal_doc(file_path))
+#' token_split(file_path)
 #' @export
-token_split <- function (xml_internal_doc, signavio = FALSE) {
+token_split <- function (file_path, signavio = FALSE) {
+  xml_internal_doc <- create_internal_doc(file_path, signavio)
   if (!signavio)
     outgoing_flows_split_gateways <-
       number_outgoing_flows(
@@ -888,15 +1096,16 @@ token_split <- function (xml_internal_doc, signavio = FALSE) {
 #'
 #' @description {Control flow complexity is defined as the sum of the outgoing of exclusive gateways, the number of parallel gateways
 #' and two to the power of all outgoing sequence flows of the inclusive gateways}
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the control flow complexity
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' control_flow_complexity(create_internal_doc(file_path))
+#' control_flow_complexity(file_path)
 #' @export
 control_flow_complexity <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     if (!signavio) {
       o_flows_exclusive <-
         number_outgoing_flows(xml_internal_doc,
@@ -959,15 +1168,16 @@ control_flow_complexity <-
 #' @title Connector mismatch
 #'
 #' @description Connector mismatch is the absolute value of the difference between split gateways and join gateways for each type of gateway, ie parallel, exclusive, inclusive, complex and event based gateways
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the connector mismatch
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' connector_mismatch(create_internal_doc(file_path))
+#' connector_mismatch(file_path)
 #' @export
 connector_mismatch <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     if (!signavio) {
       connector_mismatch <-
         abs(
@@ -1075,15 +1285,16 @@ connector_mismatch <-
 #' @title Connector heterogeneity
 #'
 #' @description Connector heterogeneity is defined as the sum of minus - p times the log of p of all gateways. p is defined as the number of a particular type of gateway divided by all gateways.
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @return an integer indicating the connector heterogeneity
-#' @examples 
+#' @examples
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' connector_heterogeneity(create_internal_doc(file_path))
+#' connector_heterogeneity(file_path)
 #' @export
 connector_heterogeneity <-
-  function (xml_internal_doc, signavio = FALSE) {
+  function (file_path, signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     event_based_gateways <-
       number_event_based_gateways(xml_internal_doc, signavio)
     complex_gateways <-
@@ -1181,25 +1392,39 @@ connector_heterogeneity <-
 #' @description The cross-connectivity metric that measures the strength of the links between process model elements.
 #' The definition of this new metric builds on the hypothesis that process models are easier understood and contain less errors if they have a high cross-connectivity.
 #' The metric is calculated based on the creation of a data frame containing the values of all connections
-#' @param repetition_and_path_log repetition and path log list object created by the function create_repetition_and_path_log
-#' @param xml_internal_doc document object created using the create_internal_document function
+#' @param file_path document object created using the create_internal_document function
 #' @param signavio boolean which indicates whether the file stems from signavio
+#' @param path_log_already_created boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false
+#' @param generate_new_path_log used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples
+#' @param time_to_generate_path_log time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.
 #' @return an integer indicating the cross connectivity of a model
-#' @examples 
-#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-#' path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-#' cross_connectivity(path_log, create_internal_doc(file_path))
+#' @examples
+#' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+#' cross_connectivity(file_path, generate_new_path_log = TRUE)
 #' @export
 cross_connectivity <-
-  function(repetition_and_path_log,
-           xml_internal_doc,
-           signavio = FALSE) {
+  function(file_path,
+           signavio = FALSE,
+           path_log_already_created = FALSE, 
+           generate_new_path_log = FALSE,
+           time_to_generate_path_log = 1500) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
+    if(!path_log_already_created) {
+      repetition_and_path_log <- 
+        tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
+                 TimeoutException = function(ex) "TimedOut")
+      if(!generate_new_path_log ) {
+        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      }
+    } 
     type <- NULL
     start <- NULL
     end <- NULL
     values <- NULL
+    if(length(repetition_and_path_log) > 0) {
+
     path_log <- repetition_and_path_log[[1]]
-    if (!signavio)
+    if (!signavio) {
       nodes <-
       getNodeSet(
         xml_internal_doc,
@@ -1210,7 +1435,8 @@ cross_connectivity <-
         //bpmn:manualTask | //bpmn:businessRuleTask | //bpmn:userTask | //bpmn:scriptTask |
         //bpmn:subProcess | //bpmn:callActivity | //task"
       )
-    else
+    } 
+    else {
       nodes <-
       getNodeSet(
         xml_internal_doc,
@@ -1221,7 +1447,7 @@ cross_connectivity <-
         //xmlns:subProcess | //xmlns:callActivity",
         namespace(xml_internal_doc)
       )
-    
+    }
     #Check all children of the gateway node having the name incoming
     nodes_incoming <- xmlApply(nodes,
                                xmlElementsByTagName,
@@ -1262,7 +1488,8 @@ cross_connectivity <-
           "//bpmn:inclusiveGateway | //inclusiveGateway | //bpmn:complexGateway | //complexGateway",
           signavio = signavio
         )
-    } else {
+    } 
+    else {
       parallel_ids <-
         node_ids(xml_internal_doc, "//xmlns:parallelGateway", signavio = signavio)
       exclusive_ids <-
@@ -1308,29 +1535,35 @@ cross_connectivity <-
     if (length(path_log) > 0) {
       denominator <-
         ((
-          size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio)
+          size_process_model(file_path, signavio) - n_data_objects(file_path, signavio)
         ) * (
-          size_process_model(xml_internal_doc, signavio) - n_data_objects(xml_internal_doc, signavio) - 1
+          size_process_model(file_path, signavio) - n_data_objects(file_path, signavio) - 1
         )
         )
       if (denominator != 0 && length(node_with_degree$degree) > 0) {
-        value_connections <-
-          valueOfConnectionPaths(path_log, node_with_degree)
-        if(length(value_connections$values) > 0) {
-        numerator <- value_connections %>%
-          group_by(start, end) %>%
-          summarise(values = max(values)) %>%
-          ungroup() %>%
-          distinct() %>%
-          summarise(values = sum(values)) %>%
-          pull(values)
-        return(numerator / (denominator))
-        } else {
+        value_connections <- 
+          tryCatch(expr = withTimeout(valueOfConnectionPaths(path_log, node_with_degree), timeout = time_to_generate_path_log), 
+                   TimeoutException = function(ex) NA)
+        if (length(value_connections$values) > 0) {
+          numerator <- value_connections %>%
+            group_by(start, end) %>%
+            summarise(values = max(values)) %>%
+            ungroup() %>%
+            distinct() %>%
+            summarise(values = sum(values)) %>%
+            pull(values)
+          return(numerator / (denominator))
+        } 
+          else {
           return(0)
         }
       }
       else
         return(0)
-    } else
-      return(0)
+    } 
+    else {
+      return(NA)
+    } 
+    }
   }
+

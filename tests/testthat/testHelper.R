@@ -1,13 +1,13 @@
 doc <- create_internal_doc("paper_diagram.bpmn")
 doc_modified <- create_internal_doc("paper_diagram_modified.bpmn")
-repetition_log <- create_path_and_repetition_log(doc)
-repetition_log_modified <- create_path_and_repetition_log(doc_modified)
+repetition_log <- create_path_and_repetition_log("paper_diagram.bpmn")
+repetition_log_modified <- create_path_and_repetition_log("paper_diagram_modified.bpmn")
 doc_empty <- create_internal_doc("paper_diagram_empty.bpmn")
-repetition_log_empty <- create_path_and_repetition_log(doc_empty)
+repetition_log_empty <- create_path_and_repetition_log("paper_diagram_empty.bpmn")
 doc_event <- create_internal_doc("paper_diagram_event.bpmn")
-repetition_log_event <- create_path_and_repetition_log(doc_event)
+repetition_log_event <- create_path_and_repetition_log("paper_diagram_event.bpmn")
 doc_simple <- create_internal_doc("paper_diagram_simple.bpmn")
-repetition_log_simple <- create_path_and_repetition_log(doc_simple)
+repetition_log_simple <- create_path_and_repetition_log("paper_diagram_simple.bpmn")
 
 type <- "//bpmn:task | //bpmn:sendTask | //bpmn:receiveTask |
 //bpmn:manualTask | //bpmn:businessRuleTask | //bpmn:userTask | //bpmn:scriptTask |

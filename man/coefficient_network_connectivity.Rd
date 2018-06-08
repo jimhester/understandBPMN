@@ -4,10 +4,10 @@
 \alias{coefficient_network_connectivity}
 \title{Coefficient of network connectivity}
 \usage{
-coefficient_network_connectivity(xml_internal_doc, signavio = FALSE)
+coefficient_network_connectivity(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Coefficient of network connectivity is defined as the number of sequence flows d
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-coefficient_network_connectivity(create_internal_doc(file_path))
+coefficient_network_connectivity(file_path)
 }

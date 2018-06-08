@@ -4,10 +4,10 @@
 \alias{token_split}
 \title{Token Split}
 \usage{
-token_split(xml_internal_doc, signavio = FALSE)
+token_split(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -20,5 +20,5 @@ because otherwise the token_split value is always one, while it should be zero i
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-token_split(create_internal_doc(file_path))
+token_split(file_path)
 }

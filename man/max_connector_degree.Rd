@@ -4,10 +4,10 @@
 \alias{max_connector_degree}
 \title{Maximum connector degree}
 \usage{
-max_connector_degree(xml_internal_doc, signavio = FALSE)
+max_connector_degree(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Maximum connector degree is defined as the gateway or activity with the most inc
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-max_connector_degree(create_internal_doc(file_path))
+max_connector_degree(file_path)
 }

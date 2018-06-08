@@ -4,10 +4,10 @@
 \alias{n_swimlanes}
 \title{Number of swimlanes}
 \usage{
-n_swimlanes(xml_internal_doc, signavio = FALSE)
+n_swimlanes(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Number of swimlanes in the pools. A swimlane represents a person, role or team
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-n_swimlanes(create_internal_doc(file_path))
+n_swimlanes(file_path)
 }

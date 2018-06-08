@@ -4,10 +4,10 @@
 \alias{n_message_flows}
 \title{Number of message flows}
 \usage{
-n_message_flows(xml_internal_doc, signavio = FALSE)
+n_message_flows(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Number of message flows. Message flows are used for communication between proces
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-n_message_flows(create_internal_doc(file_path))
+n_message_flows(file_path)
 }

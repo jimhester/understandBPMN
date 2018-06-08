@@ -4,10 +4,10 @@
 \alias{control_flow_complexity}
 \title{Control flow complexity}
 \usage{
-control_flow_complexity(xml_internal_doc, signavio = FALSE)
+control_flow_complexity(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -20,5 +20,5 @@ and two to the power of all outgoing sequence flows of the inclusive gateways}
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-control_flow_complexity(create_internal_doc(file_path))
+control_flow_complexity(file_path)
 }

@@ -4,10 +4,10 @@
 \alias{size_process_model}
 \title{Size}
 \usage{
-size_process_model(xml_internal_doc, signavio = FALSE)
+size_process_model(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ The size of a model is the number of tasks, gateways and events
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-size_process_model(create_internal_doc(file_path))
+size_process_model(file_path)
 }

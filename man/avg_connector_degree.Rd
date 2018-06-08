@@ -4,10 +4,10 @@
 \alias{avg_connector_degree}
 \title{Average connector degree}
 \usage{
-avg_connector_degree(xml_internal_doc, signavio = FALSE)
+avg_connector_degree(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Average connector degree is defined as the average incoming and outgoing sequenc
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-avg_connector_degree(create_internal_doc(file_path))
+avg_connector_degree(file_path)
 }

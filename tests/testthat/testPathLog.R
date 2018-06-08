@@ -1,21 +1,18 @@
-doc <- create_internal_doc("paper_diagram.bpmn")
+doc <- "paper_diagram.bpmn"
 repetition_log <- create_path_and_repetition_log(doc)
 repetition_log_without_structured <- create_path_and_repetition_log(doc, FALSE)
 
-doc_empty <- create_internal_doc("paper_diagram_empty.bpmn")
+doc_empty <- "paper_diagram_empty.bpmn"
 repetition_log_empty <- create_path_and_repetition_log(doc_empty)
-length_path <- c(25, 14, 19, 25, 24, 25, 24, 14, 13, 14, 13, 19, 18, 19, 18, 25, 24,
-                 24, 23, 14, 13, 13, 12, 19, 18, 18, 17)
+length_path <- c(17, 12, 23, 18, 18, 18, 18, 13, 13, 13, 13, 24, 24, 24, 24, 19, 19, 19, 19, 14, 14, 14, 14, 25, 25, 25, 25)
 
 path <- c("StartEvent_002tdck", "ExclusiveGateway_1wr5qja", "join", "Task_0e55sii", "ExclusiveGateway_1w6z1ap",
-          "split", "Task_1qiqt0s", "ExclusiveGateway_1wr5qja", "join", "Task_0e55sii", "ExclusiveGateway_1w6z1ap",
-          "split", "ExclusiveGateway_162lq5t", "join", "ExclusiveGateway_02r0dym", "split", "Task_1ehfjss", "Task_1ug8uhm",
-          "join", "split", "Task_0d8b2ac", "ExclusiveGateway_16qlp2d", "join", "Task_0glvglb", "EndEvent_1nqeoua")
+          "split","ExclusiveGateway_162lq5t", "join", "ExclusiveGateway_02r0dym", "split", "Task_1ug8uhm", "join",
+          "split", "ExclusiveGateway_16qlp2d", "join", "Task_0glvglb", "EndEvent_1nqeoua")
 
 path_structured <- c("StartEvent_002tdck", "ExclusiveGateway_1wr5qja", "XOR-loop-join", "Task_0e55sii", "ExclusiveGateway_1w6z1ap",
-          "XOR-loop-split", "Task_1qiqt0s", "ExclusiveGateway_1wr5qja", "XOR-loop-join", "Task_0e55sii", "ExclusiveGateway_1w6z1ap",
-          "XOR-loop-split", "ExclusiveGateway_162lq5t", "start-join", "ExclusiveGateway_02r0dym", "AND-split", "Task_1ehfjss", "Task_1ug8uhm",
-          "XOR-join", "AND-split", "Task_0d8b2ac", "ExclusiveGateway_16qlp2d", "AND-join", "Task_0glvglb", "EndEvent_1nqeoua")
+                     "XOR-loop-split","ExclusiveGateway_162lq5t", "start-join", "ExclusiveGateway_02r0dym", "AND-split", "Task_1ug8uhm", 
+                     "XOR-join","AND-split", "ExclusiveGateway_16qlp2d", "AND-join", "Task_0glvglb", "EndEvent_1nqeoua")
 
 context("path_log_creation")
 test_that("path_log_creation", {

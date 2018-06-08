@@ -4,10 +4,10 @@
 \alias{n_data_objects}
 \title{Data Objects}
 \usage{
-n_data_objects(xml_internal_doc, signavio = FALSE)
+n_data_objects(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ The number of data objects includes all data objects and data stores of a BPMN d
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-n_data_objects(create_internal_doc(file_path))
+n_data_objects(file_path)
 }

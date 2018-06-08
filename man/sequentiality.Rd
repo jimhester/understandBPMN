@@ -4,10 +4,10 @@
 \alias{sequentiality}
 \title{Sequentiality}
 \usage{
-sequentiality(xml_internal_doc, signavio = FALSE)
+sequentiality(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Sequentiality is defined as the number of sequence flows connecting two tasks di
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-sequentiality(create_internal_doc(file_path))
+sequentiality(file_path)
 }

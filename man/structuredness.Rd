@@ -4,14 +4,20 @@
 \alias{structuredness}
 \title{Structuredness}
 \usage{
-structuredness(repetition_and_path_log, xml_internal_doc, signavio = FALSE)
+structuredness(file_path, signavio = FALSE,
+  path_log_already_created = FALSE, generate_new_path_log = FALSE,
+  time_to_generate_path_log = 1500)
 }
 \arguments{
-\item{repetition_and_path_log}{repetition and path log list object created by the function create_repetition_and_path_log}
-
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
+
+\item{path_log_already_created}{boolean which indicates whether the path log has already been created before or not. When you are not sure, it is best to use the standard which is false}
+
+\item{generate_new_path_log}{used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples}
+
+\item{time_to_generate_path_log}{time which is the maximum time to generate a new path log in seconds. The standard setting is 1500 seconds.}
 }
 \value{
 an integer indicating the structuredness
@@ -26,7 +32,6 @@ To get the reduced process model, the following rules are applied:
 -gateways which are the consequence of multiple start or end events are removed
 }
 \examples{
-\dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
-path_log <- create_path_and_repetition_log(create_internal_doc(file_path))}
-structuredness(path_log, create_internal_doc(file_path))
+\dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
+structuredness(file_path, generate_new_path_log = TRUE)
 }

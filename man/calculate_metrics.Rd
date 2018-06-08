@@ -5,7 +5,7 @@
 \title{A calculation function for all metrics}
 \usage{
 calculate_metrics(file_path, cross_connectivity_metric = TRUE,
-  signavio = FALSE)
+  signavio = FALSE, generate_new_path_log = FALSE)
 }
 \arguments{
 \item{file_path}{file path of the BPMN file and}
@@ -13,6 +13,8 @@ calculate_metrics(file_path, cross_connectivity_metric = TRUE,
 \item{cross_connectivity_metric}{a param indicating whether cross_connectivity shall be calculated as well}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
+
+\item{generate_new_path_log}{used when it is not possible to save the path log such as with the Rapid miner or in unit tests and examples}
 }
 \value{
 a tibble with one row and for each metric a column
@@ -25,6 +27,7 @@ the maximum connector degree, the sequentiality, the cyclicity, the diameter, th
 the control flow complexity, the connector mismatch, the connector heterogeneity and the crs}
 }
 \examples{
-\dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-calculate_metrics(file_path)
+\dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")
+repetition_and_path_log <- create_path_and_repetition_log(file_path)}
+calculate_metrics(file_path, generate_new_path_log = TRUE)
 }

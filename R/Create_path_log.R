@@ -9,18 +9,19 @@
 #' - One list object for the loops (repetitions) which start with a join and end with a join
 #' - One list object for the loops (repetitions) which start with a split and end with a split
 #'( - One list for the paths in which all gateways have a certain type)}
-#' @param xml_internal_doc internal document containing an xml
+#' @param file_path internal document containing an xml
 #' @param signavio boolean which indicates whether the file stems from signavio
 #' @param add_path_log_for_structuredness a boolean value indicating whether the structured path log should be added. Is standard TRUE
 #' @return a list containing the path log, a list of repetitions starting with join, a list of repetitions starting with split, (optional: structured path log)
 #' @examples 
 #' \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-#' create_path_and_repetition_log(create_internal_doc(file_path))
+#' create_path_and_repetition_log(file_path)
 #' @export
 create_path_and_repetition_log <-
-  function(xml_internal_doc,
+  function(file_path,
            add_path_log_for_structuredness = TRUE,
            signavio = FALSE) {
+    xml_internal_doc <- create_internal_doc(file_path, signavio)
     #create a data frame with all sequence flow ids, sources and targets of the sequence flows
     if (!signavio) {
       sequence_flow_nodes <-
@@ -230,7 +231,7 @@ create_structured_path_log <-
           //xmlns:conditionalStartEvent | //xmlns:endEvent | //xmlns:messageEndEvent |
           //xmlns:terminateEndEvent | //xmlns:escalationEndEvent | //xmlns:errorEndEvent |
           //xmlns:compensationEndEvent | //xmlns:signalEndEvent | //xmlns:intermediateCatchEvent |
-          //xmlns:intermediateThrowEvent | //xmlns:boundaryEvent")
+          //xmlns:intermediateThrowEvent | //xmlns:boundaryEvent", signavio = signavio)
     }
     task_ids <- task_names(xml_internal_doc, signavio = signavio)
     if (length(task_ids) != 0)

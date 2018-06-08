@@ -4,11 +4,11 @@
 \alias{create_path_and_repetition_log}
 \title{Path and repetition log}
 \usage{
-create_path_and_repetition_log(xml_internal_doc,
+create_path_and_repetition_log(file_path,
   add_path_log_for_structuredness = TRUE, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{internal document containing an xml}
+\item{file_path}{internal document containing an xml}
 
 \item{add_path_log_for_structuredness}{a boolean value indicating whether the structured path log should be added. Is standard TRUE}
 
@@ -30,5 +30,5 @@ Assumption: for each split and join in the log, an extra element is added with t
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-create_path_and_repetition_log(create_internal_doc(file_path))
+create_path_and_repetition_log(file_path)
 }

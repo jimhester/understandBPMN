@@ -4,10 +4,10 @@
 \alias{n_pools}
 \title{Number of pools}
 \usage{
-n_pools(xml_internal_doc, signavio = FALSE)
+n_pools(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Number of pools in the process models. A pool represents an organisation or an e
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-n_pools(create_internal_doc(file_path))
+n_pools(file_path)
 }

@@ -1,4 +1,4 @@
-This package is written to calculate several understandability metrics of a BPMN model using R.
+This package is written to calculate several understandability metrics of a BPMN model using R and to test whether a relationship is possible in a BPMN model
 
 See R documentation and paper on metric implementation for more information concerning this package. 
 
@@ -26,3 +26,4 @@ Metrics which can be calculated:
 - Separability (function separability())
 - Structuredness (function structuredness())
 - Cross Connectivity (function cross_connectivity())
+- Extended cyclomatic metric of McCabe(function cyclomatic_metric())

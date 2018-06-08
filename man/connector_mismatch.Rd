@@ -4,10 +4,10 @@
 \alias{connector_mismatch}
 \title{Connector mismatch}
 \usage{
-connector_mismatch(xml_internal_doc, signavio = FALSE)
+connector_mismatch(file_path, signavio = FALSE)
 }
 \arguments{
-\item{xml_internal_doc}{document object created using the create_internal_document function}
+\item{file_path}{document object created using the create_internal_document function}
 
 \item{signavio}{boolean which indicates whether the file stems from signavio}
 }
@@ -19,5 +19,5 @@ Connector mismatch is the absolute value of the difference between split gateway
 }
 \examples{
 \dontshow{file_path <- system.file("extdata", "doc.txt", package="understandBPMN")}
-connector_mismatch(create_internal_doc(file_path))
+connector_mismatch(file_path)
 }
