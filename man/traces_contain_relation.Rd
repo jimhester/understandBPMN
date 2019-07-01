@@ -4,11 +4,11 @@
 \alias{traces_contain_relation}
 \title{Relation in traces}
 \usage{
-traces_contain_relation(repetition_and_path_log, xml_internal_doc, activity_1,
-  activity_2, always = TRUE, filter_indirect = TRUE, precede = FALSE,
-  alternate_response = FALSE, alternate_precedence = FALSE,
-  chain_response = FALSE, chain_precedence = FALSE,
-  negation_alternate_precedence = FALSE,
+traces_contain_relation(repetition_and_path_log, xml_internal_doc,
+  activity_1, activity_2, always = TRUE, filter_indirect = TRUE,
+  precede = FALSE, alternate_response = FALSE,
+  alternate_precedence = FALSE, chain_response = FALSE,
+  chain_precedence = FALSE, negation_alternate_precedence = FALSE,
   negation_alternate_response = FALSE)
 }
 \arguments{

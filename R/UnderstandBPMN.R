@@ -14,9 +14,7 @@
 #' @importFrom R.utils withTimeout
 #' @importFrom Rcpp evalCpp
 #' @importFrom utils combn
-#' @useDynLib UnderstandBPMN
-#' @exportPattern ("^[[:alpha:]]+")
-#' @useDynLib (understandBPMN, .registration=TRUE)
+#' @useDynLib understandBPMN, .registration=TRUE
 
 globalVariables(c("."))
 NULL

@@ -4,8 +4,9 @@
 \alias{cyclicity}
 \title{Cyclicity}
 \usage{
-cyclicity(file_path, signavio = FALSE, path_log_already_created = FALSE,
-  generate_new_path_log = FALSE, time_to_generate_path_log = 1500)
+cyclicity(file_path, signavio = FALSE,
+  path_log_already_created = FALSE, generate_new_path_log = FALSE,
+  time_to_generate_path_log = 1500)
 }
 \arguments{
 \item{file_path}{document object created using the create_internal_document function}

@@ -4,7 +4,8 @@
 \alias{filtered_path_log_parallel}
 \title{Filter path log with only traces containing the parallel gateway together with the relevant activity}
 \usage{
-filtered_path_log_parallel(structured_path_log, xml_internal_doc, activity_name)
+filtered_path_log_parallel(structured_path_log, xml_internal_doc,
+  activity_name)
 }
 \arguments{
 \item{structured_path_log}{repetition and path log list object created by the function create_repetition_and_path_log}
