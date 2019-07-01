@@ -10,7 +10,6 @@
 #' @import purrr
 #' @import XML
 #' @import tibble
-#' @import devtools
 #' @importFrom R.utils TimeoutException
 #' @importFrom R.utils withTimeout
 #' @importFrom Rcpp evalCpp

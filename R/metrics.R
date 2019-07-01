@@ -25,7 +25,7 @@ calculate_metrics <-
     if(!generate_new_path_log ) {
       repetition_and_path_log <-
         create_path_and_repetition_log(file_path, signavio = signavio)
-      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       all_metrics <- tibble(
         file = file_path,
         size = size_process_model(file_path, signavio),
@@ -413,7 +413,7 @@ cyclomatic_metric <-
       repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                  TimeoutException = function(ex) "TimedOut")
       if(!generate_new_path_log ) {
-        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+        usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       }
     } 
     if(length(repetition_and_path_log) > 1) {
@@ -559,7 +559,7 @@ separability <-
       repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                  TimeoutException = function(ex) "TimedOut")
       if(!generate_new_path_log ) {
-        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+        usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       }
     } 
     if(length(repetition_and_path_log) > 1) {
@@ -778,7 +778,7 @@ cyclicity <-
       repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                  TimeoutException = function(ex) "TimedOut")
       if(!generate_new_path_log ) {
-        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+        usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       }
     } 
     
@@ -827,7 +827,7 @@ diameter <- function(file_path,
     repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                TimeoutException = function(ex) "TimedOut")
     if(!generate_new_path_log ) {
-      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
     }
   } 
   if(length(repetition_and_path_log) > 1) {
@@ -884,7 +884,7 @@ structuredness <-
       repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                  TimeoutException = function(ex) "TimedOut")
       if(!generate_new_path_log ) {
-        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+        usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       }
     } 
     if(length(repetition_and_path_log) > 1) {
@@ -991,7 +991,7 @@ depth <- function(file_path,
     repetition_and_path_log <- tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                TimeoutException = function(ex) "TimedOut")
     if(!generate_new_path_log ) {
-      devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+      usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
     }
   } 
   if(length(repetition_and_path_log) > 1) {
@@ -1414,7 +1414,7 @@ cross_connectivity <-
         tryCatch(expr = withTimeout(create_path_and_repetition_log(file_path, signavio = signavio), timeout = time_to_generate_path_log), 
                  TimeoutException = function(ex) "TimedOut")
       if(!generate_new_path_log ) {
-        devtools::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
+        usethis::use_data(repetition_and_path_log,  internal = TRUE, overwrite = TRUE)
       }
     } 
     type <- NULL
